@@ -105,7 +105,7 @@ function App() {
           <section className="home-section">
             <div className="home-copy">
               <div className="eyebrow">Piloto ultracorto #1 · El Comité</div>
-              <h1>El poder no cae. Se administra.</h1>
+              <h1>El poder no cae. Cambia de manos.</h1>
               <p>
                 Un lector digital sobrio para una serie política de ficción dramatizada: episodios breves,
                 páginas centradas y una interfaz invisible que deja respirar la tensión institucional.
