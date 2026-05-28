@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { ChevronLeft, ChevronRight, BookOpen, FileText, Menu, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2, BookOpen, FileText, Menu, X } from "lucide-react";
 import "./styles.css";
 
 const episodes = [
@@ -10,8 +10,7 @@ const episodes = [
     title: "El Comité",
     pages: 4,
     status: "Disponible",
-    description:
-      "Una reunión contenida, cuatro páginas, una puerta cerrada y demasiadas versiones de la misma verdad.",
+    description: "Cuatro páginas. Una sede. Una puerta que se cierra y una organización que aprende a sobrevivir dentro del ruido.",
   },
   {
     id: "piloto-2",
@@ -19,8 +18,7 @@ const episodes = [
     title: "La llamada",
     pages: 0,
     status: "En desarrollo",
-    description:
-      "Un teléfono vibra en una mesa institucional. Nadie pregunta quién llama. Todos lo saben.",
+    description: "Un teléfono vibra en una mesa institucional. Nadie pregunta quién llama. Todos lo saben.",
   },
 ];
 
@@ -33,16 +31,16 @@ const comicPages = [
 
 const navItems = [
   { id: "home", label: "Portada" },
+  { id: "reader", label: "Leer" },
   { id: "episodes", label: "Episodios" },
-  { id: "reader", label: "Lector" },
   { id: "extras", label: "Contexto" },
 ];
 
 function ComicImagePage({ page, fullscreen }) {
   return (
-    <div className={fullscreen ? "comic-page comic-page-fullscreen" : "comic-page"}>
+    <figure className={fullscreen ? "comic-frame comic-frame-fullscreen" : "comic-frame"}>
       <img src={page.image} alt={`Manual de Supervivencia - El Comité - ${page.title}`} draggable="false" />
-    </div>
+    </figure>
   );
 }
 
@@ -66,8 +64,8 @@ function App() {
 
   return (
     <div className="app">
-      <div className="background"></div>
-      <div className="grid-bg"></div>
+      <div className="background" />
+      <div className="noise" />
 
       {!isFullscreenReader && (
         <header className="site-header">
@@ -100,80 +98,119 @@ function App() {
         </header>
       )}
 
-      <main className={isFullscreenReader ? "main fullscreen-main" : "main"}>
+      <main className={isFullscreenReader ? "main main-fullscreen" : "main"}>
         {activeSection === "home" && (
-          <section className="home-section">
-            <div className="home-copy">
-              <div className="eyebrow">Piloto ultracorto #1 · El Comité</div>
+          <section className="home">
+            <div className="home-panel">
+              <p className="kicker">Piloto ultracorto #1 · El Comité</p>
               <h1>El poder no cae. Cambia de manos.</h1>
-              <p>
-                Un lector digital sobrio para una serie política de ficción dramatizada: episodios breves,
-                páginas centradas y una interfaz invisible que deja respirar la tensión institucional.
+              <p className="home-text">
+                Una novela gráfica digital de suspense político-institucional. Episodios breves,
+                lectura inmersiva y una interfaz diseñada para que cada página respire como una escena cerrada.
               </p>
-              <div className="actions">
-                <button className="primary-button" onClick={() => goTo("reader")}>Abrir lector</button>
-                <button className="secondary-button" onClick={() => goTo("episodes")}>Ver episodios</button>
+              <div className="home-actions">
+                <button className="primary-button" onClick={() => goTo("reader")}>Leer episodio</button>
+                <button className="ghost-button" onClick={() => goTo("extras")}>Ver contexto</button>
+              </div>
+              <div className="editorial-note">
+                Obra de ficción dramatizada inspirada en hechos públicos. Algunas escenas y diálogos han sido adaptados con fines narrativos.
               </div>
             </div>
-            <div className="home-preview"><ComicImagePage page={comicPages[0]} /></div>
+
+            <button className="cover-preview" onClick={() => goTo("reader")} aria-label="Abrir lector">
+              <ComicImagePage page={comicPages[0]} />
+              <span>Abrir lector</span>
+            </button>
+          </section>
+        )}
+
+        {activeSection === "reader" && (
+          <section className={isFullscreenReader ? "reader reader-fullscreen" : "reader"}>
+            <div className="reader-topbar">
+              <div>
+                <p>El Comité</p>
+                <h2>{page.title}</h2>
+              </div>
+
+              <div className="reader-topbar-actions">
+                <span>{progress}</span>
+                <button onClick={() => setIsFullscreenReader(!isFullscreenReader)}>
+                  {isFullscreenReader ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+                  {isFullscreenReader ? "Salir" : "Pantalla completa"}
+                </button>
+              </div>
+            </div>
+
+            <div className={isFullscreenReader ? "reader-stage fullscreen-stage" : "reader-stage"}>
+              <button className="reader-arrow reader-arrow-left" onClick={prevPage} disabled={pageIndex === 0} aria-label="Página anterior">
+                <ChevronLeft size={40} />
+              </button>
+
+              <ComicImagePage page={page} fullscreen={isFullscreenReader} />
+
+              <button className="reader-arrow reader-arrow-right" onClick={nextPage} disabled={pageIndex === comicPages.length - 1} aria-label="Página siguiente">
+                <ChevronRight size={40} />
+              </button>
+            </div>
+
+            <div className="reader-footer">
+              <p>{page.caption}</p>
+              <div className="dots">
+                {comicPages.map((p, index) => (
+                  <button key={p.number} onClick={() => setPageIndex(index)} className={index === pageIndex ? "dot active" : "dot"} aria-label={`Ir a página ${p.number}`} />
+                ))}
+              </div>
+            </div>
           </section>
         )}
 
         {activeSection === "episodes" && (
           <section className="content-section">
-            <div className="section-header"><span>Índice editorial</span><h2>Episodios</h2></div>
+            <div className="section-title">
+              <p>Índice editorial</p>
+              <h2>Episodios</h2>
+            </div>
+
             <div className="episode-grid">
               {episodes.map((episode, index) => (
-                <article className="card" key={episode.id}>
-                  <div className="card-top"><span>{episode.label}</span><small>{episode.status}</small></div>
+                <article className="episode-card" key={episode.id}>
+                  <div className="episode-meta">
+                    <span>{episode.label}</span>
+                    <small>{episode.status}</small>
+                  </div>
                   <h3>{episode.title}</h3>
                   <p>{episode.description}</p>
-                  <div className="card-bottom"><span>{episode.pages || "—"} páginas</span><button disabled={index !== 0} onClick={() => goTo("reader")}>Leer</button></div>
+                  <div className="episode-bottom">
+                    <span>{episode.pages || "—"} páginas</span>
+                    <button disabled={index !== 0} onClick={() => goTo("reader")}>Leer</button>
+                  </div>
                 </article>
               ))}
             </div>
           </section>
         )}
 
-        {activeSection === "reader" && (
-          <section className={isFullscreenReader ? "reader reader-fullscreen" : "reader"}>
-            <div className="reader-header">
-              <div><span>Lector de cómic</span><h2>El Comité</h2></div>
-              <div className="reader-controls-top">
-                <div className="page-count">Página {progress}</div>
-                <button onClick={() => setIsFullscreenReader(!isFullscreenReader)}>{isFullscreenReader ? "Salir de pantalla completa" : "Pantalla completa"}</button>
-              </div>
-            </div>
-
-            <div className={isFullscreenReader ? "gallery-stage fullscreen-stage" : "gallery-stage"}>
-              <button className="gallery-arrow gallery-arrow-left" onClick={prevPage} disabled={pageIndex === 0} aria-label="Página anterior"><ChevronLeft size={36} /></button>
-              <ComicImagePage page={page} fullscreen={isFullscreenReader} />
-              <button className="gallery-arrow gallery-arrow-right" onClick={nextPage} disabled={pageIndex === comicPages.length - 1} aria-label="Página siguiente"><ChevronRight size={36} /></button>
-            </div>
-
-            <div className="dots">
-              {comicPages.map((p, index) => (
-                <button key={p.number} onClick={() => setPageIndex(index)} className={index === pageIndex ? "dot active" : "dot"} aria-label={`Ir a página ${p.number}`} />
-              ))}
-            </div>
-          </section>
-        )}
-
         {activeSection === "extras" && (
-          <section className="extras-grid">
-            <article className="card large-card">
+          <section className="extras">
+            <article className="info-card">
               <FileText />
-              <span>Aviso editorial</span>
+              <p>Aviso editorial</p>
               <h2>Ficción dramatizada</h2>
-              <p>Obra de ficción dramatizada inspirada en hechos públicos. Algunas escenas y diálogos han sido adaptados con fines narrativos.</p>
+              <span>
+                Obra de ficción dramatizada inspirada en hechos públicos. Algunas escenas y diálogos han sido adaptados con fines narrativos.
+              </span>
             </article>
-            <article className="card large-card">
+
+            <article className="info-card">
               <BookOpen />
-              <span>Contexto y extras</span>
+              <p>Contexto y extras</p>
               <h2>Material complementario</h2>
-              <div className="extras-modules">
+              <div className="extras-list">
                 {["Cronología pública", "Notas de guion", "Mapa de personajes", "Galería de portadas"].map((item) => (
-                  <div key={item}><strong>{item}</strong><p>Módulo preparado para ampliar el universo editorial sin saturar el lector.</p></div>
+                  <div key={item}>
+                    <strong>{item}</strong>
+                    <span>Espacio preparado para ampliar el universo editorial del episodio.</span>
+                  </div>
                 ))}
               </div>
             </article>
