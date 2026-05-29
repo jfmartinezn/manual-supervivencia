@@ -8,7 +8,7 @@ const episodes = [
     id: "piloto-1",
     label: "Piloto ultracorto #1",
     title: "El Comité",
-    pages: 4,
+    pages: 11,
     status: "Disponible",
     description: "Cuatro páginas. Una sede. Una puerta que se cierra y una organización que aprende a sobrevivir dentro del ruido.",
   },
@@ -27,6 +27,13 @@ const comicPages = [
   { number: 2, title: "Página 2", caption: "Llegan los protagonistas. Cada saludo es un mensaje.", image: "/pages/el-comite-02.png" },
   { number: 3, title: "Página 3", caption: "Los pasillos son la verdadera sala de máquinas.", image: "/pages/el-comite-03.png" },
   { number: 4, title: "Página 4", caption: "Entra. La puerta se cierra. El ruido desaparece.", image: "/pages/el-comite-04.png" },
+  { number: 5, title: "Página 5", caption: "La reunión continúa. Cada silencio ocupa más que una intervención.", image: "/pages/el-comite-05.png" },
+  { number: 6, title: "Página 6", caption: "Las posiciones se endurecen. Nadie quiere ser el primero en ceder.", image: "/pages/el-comite-06.png" },
+  { number: 7, title: "Página 7", caption: "Fuera, el relato empieza a tomar forma antes de que haya una salida.", image: "/pages/el-comite-07.png" },
+  { number: 8, title: "Página 8", caption: "La arquitectura institucional convierte cada espera en una amenaza.", image: "/pages/el-comite-08.png" },
+  { number: 9, title: "Página 9", caption: "Los gestos mínimos pesan más que las frases oficiales.", image: "/pages/el-comite-09.png" },
+  { number: 10, title: "Página 10", caption: "La noche avanza. La organización busca una forma de seguir en pie.", image: "/pages/el-comite-10.png" },
+  { number: 11, title: "Página 11", caption: "El comité termina, pero la supervivencia apenas empieza.", image: "/pages/el-comite-11.png" },
 ];
 
 const navItems = [
